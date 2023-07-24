@@ -47,6 +47,22 @@ class OADAT_Dataset(BaseDataset):
             self.key2 = 'sc_BP'
             self.key1_pp = self._scale_labels_to_255_fn
             self.key2_pp = self._scaleclip_normalize_fn
+        elif 'swfd_lin_swfd_scBP' in opt.name:
+            self.fname_h5 = opt.dataroot
+            self.data_key1 = 'SWFD_ms'
+            self.data_key2 = 'SWFD_sc'
+            self.key1 = 'linear_BP'
+            self.key2 = 'sc_BP'
+            self.key1_pp = self._scaleclip_normalize_fn
+            self.key2_pp = self._scaleclip_normalize_fn
+        elif 'scd_lin_scd_vcBP' in opt.name:
+            self.fname_h5 = opt.dataroot
+            self.data_key1 = 'SCD'
+            self.data_key2 = 'SCD'
+            self.key1 = 'linear_BP'
+            self.key2 = 'vc_BP'
+            self.key1_pp = self._scaleclip_normalize_fn
+            self.key2_pp = self._scaleclip_normalize_fn
         else:
             raise ValueError("Unknown dataset name: {}".format(opt.name))
         self.len1, self.len2 = None, None
