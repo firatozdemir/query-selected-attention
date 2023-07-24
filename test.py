@@ -29,7 +29,8 @@ if __name__ == '__main__':
         if i == 0:
             model.data_dependent_initialize()
             model.setup(opt)               # regular setup: load and print networks; create schedulers
-            model.parallelize()
+            if len(opt.gpu_ids) > 0 and torch.cuda.is_available():
+                model.parallelize()
             if opt.eval:
                 model.eval()
         if i >= opt.num_test:  # only apply our model to opt.num_test images.

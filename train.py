@@ -42,7 +42,8 @@ if __name__ == '__main__':
             if epoch == opt.epoch_count and i == 0:
                 model.data_dependent_initialize()
                 model.setup(opt)               # regular setup: load and print networks; create schedulers
-                model.parallelize()
+                if len(opt.gpu_ids) > 0 and torch.cuda.is_available():
+                    model.parallelize()
             model.optimize_parameters()   # calculate loss functions, get gradients, update network weights
             torch.cuda.synchronize()
             optimize_time = (time.time() - optimize_start_time) / batch_size * 0.005 + 0.995 * optimize_time
