@@ -1,0 +1,34 @@
+name: qsattn
+channels:
+  - pytorch
+  - nvidia
+  - defaults
+dependencies:
+  - python=3.8.5
+  - pip
+  - pytorch
+  - torchvision
+  - pytorch-cuda=11.7
+  - numpy
+  - h5py
+  - pip:
+    - albumentations==0.4.3
+    - opencv-python==4.1.2.30
+    - pudb==2019.2
+    - imageio==2.9.0
+    - imageio-ffmpeg==0.4.2
+    - pytorch-lightning==1.0.8
+    - omegaconf==2.0.0
+    - test-tube>=0.7.5
+    - streamlit>=0.73.1
+    - einops==0.3.0
+    - more-itertools>=8.0.0
+    - transformers==4.3.1
+    - dominate==2.4.0
+    - GPUtil==1.4.0
+    - packaging==20.8
+    - tensorboard
+    - tensorboardX
+    - visdom==0.1.8.9
+    
+    
