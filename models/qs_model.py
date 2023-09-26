@@ -12,6 +12,8 @@ class QSModel(BaseModel):
         parser.add_argument('--QS_mode', type=str, default="global", choices='(global, local, local_global)')
         parser.add_argument('--lambda_GAN', type=float, default=1.0, help='weight for GAN loss：GAN(G(X))')
         parser.add_argument('--lambda_NCE', type=float, default=1.0, help='weight for NCE loss: NCE(G(X), X)')
+        parser.add_argument('--lambda_NCE_X2Y', type=float, default=0.5, help='weight for NCE loss: NCE(G(X), Y)')
+        parser.add_argument('--lambda_NCE_Y2Y', type=float, default=0.5, help='weight for NCE loss: NCE(G(Y), Y)')
         parser.add_argument('--nce_idt', type=util.str2bool, default=True, help='use NCE loss for identity mapping: NCE(G(Y), Y))')
         parser.add_argument('--nce_layers', type=str, default='0,4,8,12,16', help='compute NCE loss on which layers')
         parser.add_argument('--netF', type=str, default='mlp_sample', choices=['sample', 'reshape', 'mlp_sample'], help='how to downsample the feature map')
@@ -21,6 +23,7 @@ class QSModel(BaseModel):
         parser.add_argument('--flip_equivariance',
                             type=util.str2bool, nargs='?', const=True, default=False,
                             help="Enforce flip-equivariance as additional regularization. It's used by FastCUT, but not CUT")
+        
 
         parser.set_defaults(pool_size=0)  # no image pooling
 
@@ -36,6 +39,8 @@ class QSModel(BaseModel):
         self.loss_names = ['G_GAN', 'D_real', 'D_fake', 'G', 'NCE']
         self.visual_names = ['real_A', 'fake_B', 'real_B']
         self.nce_layers = [int(i) for i in self.opt.nce_layers.split(',')]
+        self.lambda_NCE_X2Y = opt.lambda_NCE_X2Y
+        self.lambda_NCE_Y2Y = opt.lambda_NCE_Y2Y
 
         if opt.nce_idt and self.isTrain:
             self.loss_names += ['NCE_Y']
@@ -174,7 +179,7 @@ class QSModel(BaseModel):
 
         if self.opt.nce_idt and self.opt.lambda_NCE > 0.0:
             self.loss_NCE_Y = self.calculate_NCE_loss(self.real_B, self.idt_B)
-            loss_NCE_both = (self.loss_NCE + self.loss_NCE_Y) * 0.5
+            loss_NCE_both = self.loss_NCE * self.lambda_NCE_X2Y + self.loss_NCE_Y * self.lambda_NCE_Y2Y
         else:
             loss_NCE_both = self.loss_NCE
 

@@ -80,8 +80,8 @@ class OADAT_Dataset(BaseDataset):
         else:
             self.transform_aug = None
         self.transform_tensor = transforms.Compose([
-            transforms.ToTensor(), 
-            transforms.Normalize((0.5), (0.5)),
+            transforms.ToTensor(), #maps PIL values to [0, 1] range
+            transforms.Normalize((0.5), (0.5)), #maps vals to [-1, 1] range
             ])
 
     def check_data(self):
